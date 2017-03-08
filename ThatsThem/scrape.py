@@ -1,3 +1,5 @@
+# Use virtualenv and Python 2.7
+
 from bs4 import BeautifulSoup
 import urllib
 import xlrd, xlwt, xlutils
@@ -10,7 +12,7 @@ import requests_cache
 requests_cache.install_cache('thatsthem_cache', backend='sqlite', expire_after=157700000)
 
 # Declare constants (row and column numbers start at 0)
-START_ROW = 1                   # cell A2
+START_ROW = 1                  # cell A2
 OWNER_NAME_COL = 13
 MAIL_ADDRESS_COL = 0
 MAIL_ZIP_COL = 3
@@ -21,7 +23,7 @@ LAST_NAME_COL = 15
 print 'Phone Number Research Automation', 'Started at ' + time.asctime()
 
 # Grab data from workbook
-input_workbook = xlrd.open_workbook("/Users/stewart/Downloads/email-list/propertyfarm.xls")
+input_workbook = xlrd.open_workbook('/Users/stewart/OneDrive - Concord Real Estate/In Progress/email-list/propertyfarm.xls')
 input_sheet = input_workbook.sheet_by_index(0)
 # Copy workbook from xlrd object to xlwt object
 write_book = copy(input_workbook)
@@ -61,7 +63,7 @@ for rownum in range(START_ROW,input_sheet.nrows):
     zipCode = str(input_sheet.cell_value(rownum, MAIL_ZIP_COL)).strip()
     # Trim long zip codes
     zipCode = zipCode[0:5]
-    print input_sheet.cell_value(rownum, MAIL_ADDRESS_COL).strip() + ' ' + zipCode,
+    print str(input_sheet.cell_value(rownum, MAIL_ADDRESS_COL)).strip() + ' ' + zipCode,
     result = requests.get('https://thatsthem.com/advanced-results?d_first=&d_mid=&d_last=&d_email=&d_phone=&d_fulladdr=' + mailAddress + '&d_state=&d_city=&d_zip=' + zipCode)
     if (result.from_cache):
         print '(from cache)'
@@ -119,6 +121,7 @@ for rownum in range(START_ROW,input_sheet.nrows):
     for index in range(len(myList)):
         write_sheet.write(rownum, index+4, myList[index])
     # Write emails to two columns with additional numbers in a third
+    fetched_emails = list(set(fetched_emails))
     print 'Email: ' + ', '.join(fetched_emails)
     additionalEmails = []
     if(len(fetched_emails) > 2):
@@ -129,17 +132,17 @@ for rownum in range(START_ROW,input_sheet.nrows):
         write_sheet.write(rownum, index+10, fetched_emails[index])
 
     # Sleep 0.3s
-    time.sleep(0.300)
+    time.sleep(0.150)
     # Save spreadsheet every 50 rows
     if((rownum/50) > 1 and rownum%50 == 0):
-        write_book.save("/Users/stewart/Downloads/email-list/propertyfarm_processed.xls")
+        write_book.save('/Users/stewart/OneDrive - Concord Real Estate/In Progress/email-list/propertyfarm_processed.xls')
         print 'Saving...'
 
 
 # ###############################################
 
 # Save the workbook
-write_book.save("/Users/stewart/Downloads/email-list/propertyfarm_processed.xls")
+write_book.save('/Users/stewart/OneDrive - Concord Real Estate/In Progress/email-list/propertyfarm_processed.xls')
 
 
 
