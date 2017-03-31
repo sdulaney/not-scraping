@@ -1,20 +1,9 @@
 var scraper = {
-  iterator: '.regular-search-result',
+  iterator: '#the-list tr',
   data: {
-    title: {sel: '.biz-name span'},
-    phone: {
-        sel: '.biz-phone'
-    },
-    link: {
-        sel: '.biz-name',
-        attr: 'href'
-    },
-    address: {
-        sel: 'address',
-        method: 'text'
-    },
-    neighborhood: {
-        sel: '.neighborhood-str-list',
+    name: {sel: '.row-title'},
+    email: {
+        sel: '.column-2_contact_email'
     }
   }
 };
@@ -39,7 +28,7 @@ artoo.ajaxSpider(
       artoo.log.debug('Finished retrieving data. Downloading...');
       artoo.saveCsv(
         frontpage.concat(data),
-        {filename: 'yelp.csv'}
+        {filename: 'formidable-form.csv'}
       );
     }
   }
