@@ -1,20 +1,23 @@
 var scraper = {
-  iterator: '.regular-search-result',
+  iterator: '.agentWrap',
   data: {
-    title: {sel: '.biz-name span'},
-    phone: {
-        sel: '.biz-phone'
-    },
-    link: {
-        sel: '.biz-name',
-        attr: 'href'
-    },
-    address: {
-        sel: 'address',
+    Name: {
+        sel: 'h3',
         method: 'text'
     },
-    neighborhood: {
-        sel: '.neighborhood-str-list',
+    "Job Title / Phone": {
+        sel: '.innerOne',
+        method: function($) {
+            return $(this).text().replace(/\"/g, '').trim();
+        }
+    },
+    Specialization: {
+        sel: '.linksList',
+        method: 'text'
+    },
+    "Profile Link": {
+        sel: 'a',
+        attr: 'href'
     }
   }
 };
@@ -39,7 +42,7 @@ artoo.ajaxSpider(
       artoo.log.debug('Finished retrieving data. Downloading...');
       artoo.saveCsv(
         frontpage.concat(data),
-        {filename: 'yelp.csv'}
+        {filename: 'agents.csv'}
       );
     }
   }
